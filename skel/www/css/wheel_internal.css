@@ -1,0 +1,30 @@
+body {
+  font-family: arial, verdana, sans;
+  font-size: 1em;
+  margin: 0;
+}
+div#content {
+  padding: 5px;
+  border-right: 1px solid #3e4254;
+  border-left: 1px solid #3e4254;
+}
+div.toolbar {
+  background-color: #3e4254;
+  color: #ACB7E5;
+  font-weight: bold;
+  font-size: .75em;
+  padding: 3px;
+}
+div#footer {
+  text-align: center;
+  font-weight: normal;
+  font-size: .66em;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+p {
+  margin-top: .5em;
+  margin-bottom: .5em;
+}
