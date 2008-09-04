@@ -21,7 +21,7 @@ set_exception_handler('wheelExceptionHdl'); //i can has pretty excepshn reportz?
 //this is how real men route, Richard Crowley
 $controller = ($_GET['c']!='') ? $_GET['c'] : 'main';
 $action = ($_GET['a']!='') ? $_GET['a'] : 'index';
-$partial = isset($_GET['partial']); //in case we're trying to get a partial view asynchronously
+$viewOnly = isset($_GET['viewOnly']); //in case we're trying to get a partial view asynchronously
 //THUNDERCATS, GOOOOOO
-echo wheel::dispatch($controller, $action, $partial);
+echo wheel::dispatch($controller, $action, $viewOnly);
 ?>
