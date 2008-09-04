@@ -9,9 +9,9 @@
  * @package wheel
  */
 //configuration here plz
-$conf['local_inc_dir'] = '/home/mikhailp/hackery/wheel/trunk/skel/inc'; //set this in a local variable first since ked:: does not yet exist.
-$conf['conf_dir'] = '/home/mikhailp/hackery/wheel/trunk/skel/conf';
-$conf['smarty_dir'] = '/home/mikhailp/hackery/wheel/trunk/skel/inc/smarty';
+$conf['local_inc_dir'] = '/home/mikhailp/hackery/wheel/skel/inc'; //set this in a local variable first since ked:: does not yet exist.
+$conf['conf_dir'] = '/home/mikhailp/hackery/wheel/skel/conf';
+$conf['smarty_dir'] = '/home/mikhailp/hackery/wheel/skel/inc/smarty';
 $conf['smarty_lib_dir'] = 'smarty';
 $conf['env'] = 'dev'; //change this var to get it from wherever; should be 'dev' or 'prod' in the end
 //end of configuration
