@@ -145,8 +145,7 @@ abstract class wheel {
     * dispatch to the right controller/action
     * @param string $controller the controller to be invoked; object or string; passing an object makes all operations use that same object. passing a string creates a new object of the controller
     * @param string $action the action to be executed
-    * @param array $param parameters passed from outside (by default, null and taken from _REQUEST and _POST in _execute
-    * @param bool $partial whether or not this is a partial view
+    * @param bool $viewOnly whether to render just the view (for xhr stuff)
     */
     public static function dispatch($controller, $action, $viewOnly = false) {
         if (is_string($controller))
@@ -172,6 +171,22 @@ abstract class wheel {
         return $control->viewContent;
         else
         return $control->_renderLayout();
+    }
+    /**
+    * render a partial view using given data
+    * @param string $controller the controller to be invoked; object or string; passing an object makes all operations use that same object. passing a string creates a new object of the controller
+    * @param string $view the view to be rendered
+    * @param array $vars smarty template variables in associated array format
+    * @param bool $viewOnly whether to render just the view (for xhr stuff)
+    */
+    public static function partial($controller, $view, $vars) {
+        $ctl = self::inst($controller);
+        $ctl->_view = $view;
+        foreach ($vars as $k=>$v) {
+            $ctl->$k = $v;
+        }
+        $ctl->_render($view);
+        return $ctl->viewContent;
     }
     /**
      * return an instance of the controller; load the file for the controller from controllers dir if needed
