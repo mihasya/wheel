@@ -180,13 +180,16 @@ abstract class wheel {
     * @param bool $viewOnly whether to render just the view (for xhr stuff)
     */
     public static function partial($controller, $view, $vars) {
-        $ctl = self::inst($controller);
-        $ctl->_view = $view;
-        foreach ($vars as $k=>$v) {
-            $ctl->$k = $v;
+        $tpl = 'views/'.str_replace('_', '/', $controller).'/'.$view.'.tpl';
+        //gulp the view into a buffer and set it to viewContent for the dispatch/_renderLayout to handle
+        ob_start();
+        foreach($vars as $key=>$value) {
+            wheel::smarty()->assign($key, $value);
         }
-        $ctl->_render($view);
-        return $ctl->viewContent;
+        wheel::smarty()->display($tpl);
+        $viewContent = ob_get_contents();
+        ob_end_clean();
+        return $viewContent;
     }
     /**
      * return an instance of the controller; load the file for the controller from controllers dir if needed
