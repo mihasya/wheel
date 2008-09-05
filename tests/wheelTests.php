@@ -9,11 +9,16 @@ class wheelTests extends PHPUnit_Framework_TestCase {
         $match = preg_match("/^this is only a test/", $out);
         $this->assertTrue((bool)$match);
         $match = $out = null;
-        $out = wheel::partial('internal_demo', 'nameCaller', array('var1'=>'') );
+        $out = wheel::partial('test_main', 'test1', array('var1'=>'') );
         $this->assertTrue($match=="");
     }
     public function testDispatch() {
-        //TODO: create test controller/views with basic dom trees
+        $output = wheel::dispatch('test_main', 'index');
+        $this->assertTrue((bool)preg_match("/^\<html\>/m", $output));
+        $output = wheel::dispatch('test_main', 'test1');
+        $this->assertTrue((bool)preg_match("/^\<html\>/m", $output));
+        $output = wheel::dispatch('test_main', 'index', true);
+        $this->assertTrue($output == 'wheel goes round');
     }
 }
 ?>
