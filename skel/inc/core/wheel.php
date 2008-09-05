@@ -76,6 +76,7 @@ class wheelController {
             foreach ($this as $key=>$value) {
                 if ($key[0]!='_') { //only assign view vars - no _'s in front
                     $smarty->assign($key, $value);
+                    unset($this->$key);//unset to prevent additional looping in layout
                 }
             }
         }
@@ -99,8 +100,7 @@ class wheelController {
         if ($this->__layout==null) return; //if _layout was set to null in the action, we dont need a layout
         $smarty = wheel::smarty();
         foreach ($this as $key=>$value) {
-            if ($key[0]=='_' && $key[1]!='_') { //assign layout vars - single _ in front
-                //echo "layout: $key $value \n";
+            if ($key[1]!='_') { //assign layout vars - single _ in front (don't need to check for it, since those all got unset already in _render)
                 $smarty->assign($key, $value); //set smarty vars
             }
         }
