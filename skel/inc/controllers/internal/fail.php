@@ -13,12 +13,12 @@
  * @package wheel
  */
 class internal_failController extends wheelController {
+    var $__layout = 'internal_wheel';
   /**
    * puke the trace
    */
   function puke () {
-    $this->_layout='internal_wheel';
-    $this->pageTitle = 'wheelvc error report';
+    $this->_pageTitle = 'wheelvc error report';
   }
 }
 ?>

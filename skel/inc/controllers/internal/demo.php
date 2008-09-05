@@ -13,7 +13,7 @@
  * @package wheel
  */
 class internal_demoController extends wheelController {
-  var $_layout = 'internal_wheel';
+  var $__layout = 'internal_wheel';
   function index() {
     $this->passAlongTest = 'Variable passed along in the forward!';
     return $this->_forward($this, 'action1');
@@ -22,7 +22,7 @@ class internal_demoController extends wheelController {
     return $this->_forward($this, 'nameCaller');
   }
   function nameCaller() {
-    $this->pageTitle = 'wheel tester: name caller';
+    $this->_pageTitle = 'wheel tester: name caller';
     $name = $_GET['name'];
     $this->name = ($name=='') ? 'Ned' : ucfirst($name);
   }
