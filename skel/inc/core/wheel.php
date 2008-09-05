@@ -17,9 +17,10 @@
  * @package wheel
  */
 class wheelController {
-    public  $_layout = 'default';
-    public  $_view = '';
-    private $_skipAssign = false;
+    public $__layout='default';
+    public $__view='';
+    public $__skipAssign=false;
+
     function __toString() {
         return 'Instance of ' . get_class($this);
     }
@@ -43,7 +44,7 @@ class wheelController {
      * @param string $action the action to execute after abort.
      */
     function _abort($controller, $action, $param=null) {
-        $this->_abort = array('controller'=>$controller, 'action'=>$action, 'param'=>$param);
+        $this->__abort = array('controller'=>$controller, 'action'=>$action, 'param'=>$param);
     }
     /**
      * execute the requested action from the controller
@@ -53,10 +54,10 @@ class wheelController {
      */
     function _execute($action, $param=null) {
         $this->_preExecute();
-        if ($this->_abort) return $this->_abort; //if somewhere before execution (in a plugin, for example) the abort flag was thrown, return that to the dispatch
-        $this->_view = $action; //default _view value; can be overridden to null in the action to avoid rendering the .tpl
+        if ($this->__abort) return $this->__abort; //if somewhere before execution (in a plugin, for example) the abort flag was thrown, return that to the dispatch
+        $this->__view = $action; //default _view value; can be overridden to null in the action to avoid rendering the .tpl
         if (!method_exists($this, $action)) {
-            $this->_skipAssign = true; //tell _render to skip smarty->assign related steps for this.
+            $this->__skipAssign = true; //tell _render to skip smarty->assign related steps for this.
             return; //return nothing;
         }
         $result = call_user_method($action, $this); //execute the method if it exists.
@@ -68,41 +69,50 @@ class wheelController {
      * @param string $action which action is to be renered
      */
     function _render($action) {
-        if ($this->_view===null) return; //if _view was set to null in the action, then we dont need a view
-        $this->_view = ($this->_view==='') ? $action : $this->_view; //if no view was set, use $action as view name (for actionless views)
+        if ($this->__view===null) return; //if _view was set to null in the action, then we dont need a view
+        $this->__view = ($this->__view==='') ? $action : $this->__view; //if no view was set, use $action as view name (for actionless views)
         $smarty = wheel::smarty();
-        if (!$this->_skipAssign) foreach ($this as $key=>$value) if ($key[0]!='_') $smarty->assign($key, $value);
+        if (!$this->__skipAssign) {
+            foreach ($this as $key=>$value) {
+                if ($key[0]!='_') { //only assign view vars - no _'s in front
+                    $smarty->assign($key, $value);
+                }
+            }
+        }
         $controller = str_replace('Controller','',get_class($this));
-        $tpl = 'views/'.str_replace('_', '/', $controller).'/'.$this->_view.'.tpl';
+        $tpl = 'views/'.str_replace('_', '/', $controller).'/'.$this->__view.'.tpl';
         //gulp the view into a buffer and set it to viewContent for the dispatch/_renderLayout to handle
         ob_start();
         $smarty->display($tpl);
         $viewContent = ob_get_contents();
         ob_end_clean();
-        if (!$this->_skipAssign) $smarty->clear_all_assign();
+        if (!$this->__skipAssign) $smarty->clear_all_assign();
         if (strpos($viewContent, "<b>Warning</b>:  Smarty error: unable to read resource:")!==false)
-        throw new wheelException('The view "'.$this->_view.'" was not found at ' . $tpl);
-        $this->viewContent = $viewContent;
-        $this->_skipAssign = false; //reset this to make sure subsequent actions don't get tainted
+        throw new wheelException('The view "'.$this->__view.'" was not found at ' . $tpl);
+        $this->_viewContent = $viewContent;
+        $this->__skipAssign = false; //reset this to make sure subsequent actions don't get tainted
     }
     /**
      * render the the overall layout.
      */
     function _renderLayout() {
-        if ($this->_layout==null) return; //if _layout was set to null in the action, we dont need a layout
+        if ($this->__layout==null) return; //if _layout was set to null in the action, we dont need a layout
         $smarty = wheel::smarty();
         foreach ($this as $key=>$value) {
-            if ($key[0]!='_') $smarty->assign($key, $value); //set smarty vars
+            if ($key[0]=='_' && $key[1]!='_') { //assign layout vars - single _ in front
+                //echo "layout: $key $value \n";
+                $smarty->assign($key, $value); //set smarty vars
+            }
         }
-        $tpl = 'layouts/'.str_replace('_', '/', $this->_layout).'.tpl';
+        $tpl = 'layouts/'.str_replace('_', '/', $this->__layout).'.tpl';
         ob_start();
         $smarty->display($tpl);
-        $this->layoutContent = ob_get_contents();
+        $this->_layoutContent = ob_get_contents();
         ob_end_clean();
-        if (strpos($this->layoutContent, "<b>Warning</b>:  Smarty error: unable to read resource:")!==false)
-        throw new wheelException('The layout "'.$this->_layout.'" was not found at ' . $tpl);
+        if (strpos($this->_layoutContent, "<b>Warning</b>:  Smarty error: unable to read resource:")!==false)
+        throw new wheelException('The layout "'.$this->__layout.'" was not found at ' . $tpl);
         $smarty->clear_all_assign();
-        return $this->layoutContent;
+        return $this->_layoutContent;
     }
     /**
      * load and execute another controller->action; keep url the same.
@@ -167,8 +177,8 @@ abstract class wheel {
         }
         //TODO: do i need to do something differently here if _view==null?
         $control->_render($action);
-        if ($viewOnly || $control->_layout==null)
-        return $control->viewContent;
+        if ($viewOnly || $control->__layout==null)
+        return $control->_viewContent;
         else
         return $control->_renderLayout();
     }

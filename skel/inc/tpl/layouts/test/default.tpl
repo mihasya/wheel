@@ -1,8 +1,8 @@
 <html>
     <head>
-      <title>{$pageTitle}</title>
+      <title>{$_pageTitle}</title>
     </head>
     <body>
-        {$viewContent}
+        {$_viewContent}
     </body>
 </html>
