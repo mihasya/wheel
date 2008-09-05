@@ -8,5 +8,8 @@ class test_mainController extends wheelController {
         $this->_pageTitle = 'wheel test';
         $this->var1 = 'wheel goes round';
     }
+    public function forward_test() {
+        return $this->_forward('test_secondary', 'singASong');
+    }
 }
 ?>
