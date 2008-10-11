@@ -24,6 +24,9 @@ class wheelController {
     function __toString() {
         return 'Instance of ' . get_class($this);
     }
+    function __construct() {
+        $this->__method = strtolower($_SERVER['REQUEST_METHOD']);
+    }
     /**
      * blank preExecute; if not overridden, nothing happens.
      * this can be used for things that you want executed before every action, like an auth function
